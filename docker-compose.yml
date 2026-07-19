@@ -1,0 +1,91 @@
+version: "3.9"
+
+services:
+  # ==========================
+  # API Gateway
+  # ==========================
+  api-gateway:
+    build:
+      context: ./university-management-api-gateway
+      dockerfile: Dockerfile
+    container_name: university-management-api-gateway
+    restart: unless-stopped
+    ports:
+      - "3030:3030"
+    env_file:
+      - ./university-management-api-gateway/.env
+    depends_on:
+      - auth-service
+      - core-service
+    networks:
+      - university-network
+
+  # ==========================
+  # Auth Service
+  # ==========================
+  auth-service:
+    build:
+      context: ./university-management-backend-auth-service
+      dockerfile: Dockerfile
+    container_name: university-management-backend-auth-service
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./university-management-backend-auth-service/.env
+    depends_on:
+      - redis
+    networks:
+      - university-network
+
+  # ==========================
+  # Core Service
+  # ==========================
+  core-service:
+    build:
+      context: ./university-management-core-service
+      dockerfile: Dockerfile
+    container_name: university-management-core-service
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    env_file:
+      - ./university-management-core-service/.env
+    depends_on:
+      - redis
+    networks:
+      - university-network
+
+  # ==========================
+  # Frontend
+  # ==========================
+  frontend:
+    build:
+      context: ./university-management-frontend
+      dockerfile: Dockerfile
+    container_name: university-management-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./university-management-frontend/.env.local
+    depends_on:
+      - api-gateway
+    networks:
+      - university-network
+
+  # ==========================
+  # Redis
+  # ==========================
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - university-network
+
+networks:
+  university-network:
+    driver: bridge
