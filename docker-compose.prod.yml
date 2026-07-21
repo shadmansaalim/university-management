@@ -47,6 +47,7 @@ services:
       - ./env/core.env
     depends_on:
       - redis
+      - postgres
     networks:
       - university-network
 
