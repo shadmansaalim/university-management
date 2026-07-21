@@ -1,0 +1,29 @@
+name: Deploy University Management
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Update repository
+        run: |
+          cd /home/ubuntu/university-management
+          git pull origin main
+
+      - name: Pull latest Docker images
+        run: |
+          cd /home/ubuntu/university-management
+          docker compose -f docker-compose.prod.yml pull
+
+      - name: Deploy containers
+        run: |
+          cd /home/ubuntu/university-management
+          docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+      - name: Remove unused Docker images
+        run: docker image prune -f
