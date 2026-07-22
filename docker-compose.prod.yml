@@ -81,19 +81,6 @@ services:
     networks:
       - university-network
 
-  postgres:
-    image: postgres:16-alpine
-    container_name: postgres
-    restart: unless-stopped
-    env_file:
-      - ./env/postgres.env
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    expose:
-      - "5432"
-    networks:
-      - university-network
-
 networks:
   university-network:
     driver: bridge
