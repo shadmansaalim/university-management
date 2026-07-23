@@ -13,7 +13,7 @@ services:
     ports:
       - "3030:3030"
     env_file:
-      - ./university-management-api-gateway/.env
+      - ./env/gateway.env
     depends_on:
       - auth-service
       - core-service
@@ -30,9 +30,9 @@ services:
     container_name: university-management-backend-auth-service
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "3001"
     env_file:
-      - ./university-management-backend-auth-service/.env
+      - ./env/auth.env
     depends_on:
       - redis
     networks:
@@ -48,9 +48,9 @@ services:
     container_name: university-management-core-service
     restart: unless-stopped
     ports:
-      - "3002:3002"
+      - "3002"
     env_file:
-      - ./university-management-core-service/.env
+      - ./env/core.env
     depends_on:
       - redis
     networks:
@@ -68,7 +68,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ./university-management-frontend/.env.local
+      - ./env/frontend.env
     depends_on:
       - api-gateway
     networks:
